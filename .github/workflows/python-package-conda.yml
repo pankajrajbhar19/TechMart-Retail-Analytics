@@ -24,7 +24,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Install all required tools directly with conda
           conda install -y flake8 pytest
 
       - name: Lint with flake8
@@ -36,4 +35,10 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest
+          # Run pytest only if test files exist
+          if compgen -G "tests/test_*.py" > /dev/null || compgen -G "test_*.py" > /dev/null; then
+            echo "Tests found, running pytest..."
+            pytest
+          else
+            echo "No tests found, skipping pytest."
+          fi
